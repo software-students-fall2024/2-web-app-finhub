@@ -67,8 +67,10 @@ Vocabulary
             border-radius: 5px;
             margin: 5px 0;
             display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .word-box .word{
+        .word-box .word {
             border-right: 2px solid black;
             font-weight: bold;
             min-width: 30%;
@@ -76,19 +78,24 @@ Vocabulary
             padding-right: 0.2rem;
             overflow-wrap: break-word;
             word-break: break-word;
-            text-align: center
+            text-align: center;
         }
-        .word-box .definition{
+        .word-box .definition {
             padding-left: 0.2rem;
+            flex-grow: 1;
         }
-        .word-box .delete-button{
-            height: 1.6rem;
-            padding: 0rem 0.5rem;
-            background-color: red;
+        .word-box .edit-button,
+        .word-box .delete-button {
+            padding: 0.3rem 0.6rem;
+            background-color: #008CBA;
             border: none;
-            border-radius: 50%;
+            border-radius: 5px;
             color: white;
-            margin: auto;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        .word-box .delete-button {
+            background-color: red;
         }
         .start-quiz {
             background-color: #6CB873;
@@ -105,22 +112,20 @@ Vocabulary
             width: 100%;
             gap: 0.1rem;
         }
-        .search-bar input{
+        .search-bar input {
             flex-grow: 1;
-            background-color:  #858585;
+            background-color: #858585;
             padding: 0.5rem;
             border-radius: 1rem;
-
         }
-        .search-bar .search-btn{
+        .search-bar .search-btn {
             border-radius: 1rem;
             padding: 0rem 0.3rem;
             color: #6CB873;
             border: 2px solid #6CB873;
             background-color: transparent;
-
         }
-        .search-bar .x-btn{
+        .search-bar .x-btn {
             border-radius: 1rem;
             padding: 0rem 0.7rem;
             padding-top: 0.3rem;
@@ -129,12 +134,64 @@ Vocabulary
             border: 2px solid red;
             background-color: transparent;
         }
-        .no-vocab{
+        .no-vocab {
             color: white;
+        }
+        #add-vocab-form {
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px;
+        }
+        #add-vocab-form input {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+        }
+        #add-vocab-form button {
+            padding: 10px;
+            background-color: #6CB873;
+            color: black;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        #edit-form {
+            display: none;
+            flex-direction: column;
+            background-color: #4CAF50;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+        }
+        #edit-form input {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 1rem;
+        }
+        #edit-form button {
+            background-color: #6CB873;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
         }
     </style>
 {% endblock %}
 {% block content %}
+
+    <!-- Add New Word Form -->
+    <form id="add-vocab-form" onsubmit="addVocab(event)">
+        <input type="text" id="new-word" placeholder="New word" required>
+        <input type="text" id="new-definition" placeholder="Definition" required>
+        <button type="submit">Add Word</button>
+    </form>
+
     {% if vocab_list[0]%}
         <div class="flashcard" onclick="toggleDefinition()">
             <span id="flashcard-word">{{vocab_list[0].word}}</span> 
@@ -153,11 +210,12 @@ Vocabulary
         </div>
     
         <div class="word-bank" id="word-bank">
-            {% if searchVal%}
+            {% if searchVal %}
                 {% for word in search_list %}
                 <div class="word-box">
                     <div class="word">{{word.word}}</div>
                     <div class="definition">{{word.definition}}</div>
+                    <button class="edit-button" onclick="editVocab('{{ word.word }}', '{{ word.definition }}')">Edit</button>
                     <button class="delete-button" onclick="deleteWord('{{word.word}}')">x</button>
                 </div>
                 {% endfor %}
@@ -166,20 +224,26 @@ Vocabulary
                 <div class="word-box">
                     <div class="word">{{word.word}}</div>
                     <div class="definition">{{word.definition}}</div>
+                    <button class="edit-button" onclick="editVocab('{{ word.word }}', '{{ word.definition }}')">Edit</button>
                     <button class="delete-button" onclick="deleteWord('{{word.word}}')">x</button>
                 </div>
                 {% endfor %}
             {% endif %}
-
         </div>
-    
-        <!--<button class="start-quiz" onclick="window.location.href='quiz-page.html'">Start Quiz →</button>-->
 
     {% else %}
         <div class="no-vocab">
             There are no words yet!
         </div>
     {% endif %}
+
+    <!-- Edit Form -->
+    <div id="edit-form">
+        <input type="hidden" id="edit-old-word">
+        <input type="text" id="edit-new-word" placeholder="New word" required>
+        <input type="text" id="edit-new-definition" placeholder="New definition" required>
+        <button onclick="submitEdit()">Save Changes</button>
+    </div>
 
     <script>
         const vocabList = {{ vocab_list | tojson }};
@@ -208,9 +272,9 @@ Vocabulary
         }
 
         function toggleDefinition() {
-            currSide = currSide==='word' ? 'definition' : 'word'
+            currSide = currSide==='word' ? 'definition' : 'word';
             const content = document.getElementById('flashcard-word');
-            content.textContent = currSide==='word' ? vocabList[currentIndex].word : vocabList[currentIndex].definition 
+            content.textContent = currSide==='word' ? vocabList[currentIndex].word : vocabList[currentIndex].definition;
         }
 
         function updateCard(){
@@ -218,7 +282,7 @@ Vocabulary
             const indexTextElement = document.getElementById('index-text');
             
             flashcardWord.textContent = vocabList[currentIndex].word;
-            currSide = 'word'
+            currSide = 'word';
             
             indexTextElement.textContent = `${currentIndex+1} / ${vocabList.length}`;
         }
@@ -226,16 +290,69 @@ Vocabulary
         function previousVocabulary() {
             if (currentIndex > 0) {
                 currentIndex--;
-                updateCard()
+                updateCard();
             }
         }
 
         function nextVocabulary() {
             if (currentIndex < vocabList.length - 1) {
                 currentIndex++;
-                updateCard()
+                updateCard();
             }
+        }
+
+        // Function to add new vocab
+        function addVocab(event) {
+            event.preventDefault();
+            const word = document.getElementById('new-word').value;
+            const definition = document.getElementById('new-definition').value;
+
+            fetch('/vocab', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({ word, definition }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message);
+                window.location.reload();
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Function to populate edit form with the existing word and definition
+        function editVocab(word, definition) {
+            document.getElementById('edit-form').style.display = 'flex';
+            document.getElementById('edit-old-word').value = word;
+            document.getElementById('edit-new-word').value = word;
+            document.getElementById('edit-new-definition').value = definition;
+        }
+
+        // Function to submit edit
+        function submitEdit() {
+            const oldWord = document.getElementById('edit-old-word').value;
+            const newWord = document.getElementById('edit-new-word').value;
+            const newDefinition = document.getElementById('edit-new-definition').value;
+
+            fetch('/vocab/edit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    old_word: oldWord,
+                    new_word: newWord,
+                    new_definition: newDefinition
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message);
+                window.location.reload();
+            })
+            .catch(error => console.error('Error:', error));
         }
     </script>
 {% endblock %}
-

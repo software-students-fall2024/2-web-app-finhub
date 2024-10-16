@@ -18,7 +18,7 @@ def create_app():
     
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default_secret_key')
 
-    connection_string = os.getenv("MONGO_URI")  # Corrected to use "MONGO_URI" instead of MONGO_URI
+    connection_string = os.getenv('MONGO_URI', 'mongodb+srv://raa9917:Rr12112002@cluster0.p902n.mongodb.net/?retryWrites=true&w=majority')
 
     if connection_string is None:
         raise ValueError("MONGO_URI environment variable not found!")
@@ -201,6 +201,27 @@ def create_app():
         # render the template and pass in the vocab list
         return render_template("Vocabulary.html", vocab_list=vocab_list)
     
+    # Edit existing word in the vocabulary list
+    @app.route("/vocab/edit", methods=["POST"])
+    @login_required
+    def editVocab():
+        old_word = request.form.get("old_word")
+        new_word = request.form.get("new_word")
+        new_definition = request.form.get("new_definition")
+
+        if old_word and new_word and new_definition:
+            # Update word in MongoDB
+            db.users.update_one(
+                {"username": current_user.username, "vocabList.word": old_word},
+                {"$set": {"vocabList.$.word": new_word, "vocabList.$.definition": new_definition}}
+            )
+            flash("Word updated successfully!")
+            return jsonify({"message": "Vocab word updated!"}), 200
+        else:
+            flash("Error: Please provide the old word, new word, and definition!")
+            return jsonify({"error": "Required fields are missing!"}), 400
+
+    
     @app.route("/vocab/<word>")
     @login_required
     def getVocabSearch(word):
@@ -218,24 +239,27 @@ def create_app():
         # render the template and pass in the vocab list
         return render_template("Vocabulary.html", vocab_list=vocab_list, searchVal=word, search_list=search_list)
             
-    @app.route("/vocab",methods=["POST"])
+    # Add new word to the vocabulary list
+    @app.route("/vocab", methods=["POST"])
+    @login_required
     def sendVocab():
-        #add vocab(word, definition) to the user vocab list
         word = request.form["word"]
         definition = request.form["definition"]
-        
+    
         if word and definition:
             new_vocab = {"word": word, "definition": definition}
-            
-            # update mongo database user's vocablist with new word
-            db.users.update_one({"username": current_user.username}, 
-                                {"$push": {"vocabList": new_vocab}})
         
+            # Update MongoDB user's vocabList with new word
+            db.users.update_one(
+                {"username": current_user.username}, 
+                {"$push": {"vocabList": new_vocab}}
+            )
             flash("Word added to the list!")
             return jsonify({"message": "Word added successfully!"}), 200
         else:
             flash("Error: Please provide word and definition!")
             return jsonify({"error": "Word or definition missing."}), 400
+
             
     @app.route("/vocab/<word>",methods=["DELETE"])
     def deleteVocab(word):
