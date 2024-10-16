@@ -18,7 +18,7 @@ def create_app():
     
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default_secret_key')
 
-    connection_string = os.getenv('MONGO_URI', 'mongodb+srv://raa9917:Rr12112002@cluster0.p902n.mongodb.net/?retryWrites=true&w=majority')
+    connection_string = os.getenv('MONGO_URI')
 
     if connection_string is None:
         raise ValueError("MONGO_URI environment variable not found!")
@@ -216,7 +216,6 @@ def create_app():
                 {"username": current_user.username, "vocabList.word": old_word},
                 {"$set": {"vocabList.$.word": new_word, "vocabList.$.definition": new_definition}}
             )
-            flash("Word updated successfully!")
             return jsonify({"message": "Vocab word updated!"}), 200
         else:
             flash("Error: Please provide the old word, new word, and definition!")
