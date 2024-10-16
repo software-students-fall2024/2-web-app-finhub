@@ -38,11 +38,7 @@ A little exercise to build a web application following an agile development proc
 
 ## Steps necessary to run the software
 
-### 1. Create or Update the `README.md` File
-
-- If you already have a `README.md` file, you can update it with the installation guide below. If not, you can create a new one in the root of your project.
-
-### 2. Installation Guide
+### 1. Installation Guide
 
 ```
 ## Installation Guide
