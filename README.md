@@ -38,10 +38,6 @@ A little exercise to build a web application following an agile development proc
 
 ## Steps necessary to run the software
 
-### 1. Installation Guide
-
-```
-## Installation Guide
 
 ### 1. Clone the Repository
 
@@ -152,31 +148,7 @@ Feel free to fork this project and contribute by submitting pull requests. Pleas
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-```markdown
-markdown
-Copy code
-### 3. Add the README.md to Your Repository
 
-1. In your local repository:
-   - If you don't have a `README.md` file:
-     ```bash
-     touch README.md
-     ```
-
-   - If you already have one, open it with your favorite text editor and replace its content with the guide above or append the new content.
-
-2. After adding or updating the `README.md`, commit the changes:
-   ```bash
-   git add README.md
-   git commit -m "Add installation guide"
-
-```
-
-1. Push the changes to your GitHub repository:
-    
-    ```bash
-    git push origin main
-    ```
 ## Task boards
 
 https://github.com/orgs/software-students-fall2024/projects/45
