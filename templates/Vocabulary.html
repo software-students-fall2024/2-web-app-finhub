@@ -226,7 +226,8 @@ Vocabulary
         input[type="checkbox"] {
             display: none;
         }
-        input[type="checkbox"]:checked + .click-indicator {
+        /* hides the click to flip emenet when the card is cllicked */
+        input[type="checkbox"]:checked ~ .click-indicator {
             display: none;
         }
         .flashcard-container {
