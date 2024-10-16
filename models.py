@@ -10,7 +10,7 @@ class User(UserMixin):
         self.password = password
         self.firstname = firstname
         self.lastname = lastname
-        self.vocabList if vocabList else [] # store vocablist as the list or an empty list
+        self.vocabList = vocabList if vocabList is not None and vocabList else []
         self.id = username # we'll keep emails as the unique id for users unless we want to change later...
                         # this is not mongodb id so don't get confused
 

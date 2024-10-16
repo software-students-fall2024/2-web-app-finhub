@@ -50,7 +50,7 @@ def create_app():
     def home():
         # redirect to news page if the user is logged in, otherwise to login
         if current_user.is_authenticated:
-            return redirect(url_for("getNews"))
+            return redirect(url_for("getAllNews"))
         else:
             return redirect(url_for("login"))
     
@@ -63,7 +63,7 @@ def create_app():
             user = User.validate_login(db, username, password)
             if user:
                 login_user(user)
-                return redirect(url_for("getNews"))
+                return redirect(url_for("getAllNews"))
             else:
                 flash("Invalid username or password. Try again.")
                 return render_template('home.html', error="Error occurred!")
@@ -255,7 +255,7 @@ def create_app():
                 {"username": current_user.username}, 
                 {"$push": {"vocabList": new_vocab}}
             )
-            flash("Word added to the list!")
+            #flash("Word added to the list!")
             return jsonify({"message": "Word added successfully!"}), 200
         else:
             flash("Error: Please provide word and definition!")
@@ -272,7 +272,7 @@ def create_app():
                 {"$pull": {"vocabList": {"word": word}}}
             )
         
-            flash("Word successfully deleted!")
+            #flash("Word successfully deleted!")
         else:
             flash("Error: no word was provided to delete"
                   )
