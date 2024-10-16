@@ -43,9 +43,6 @@ Vocabulary
             color: black;
             font-size: 1.3rem;
         }
-        .flashcard:hover {
-            background-color: #45a049;
-        }
         .navigation {
             display: flex;
             justify-content: space-between;
@@ -209,18 +206,43 @@ Vocabulary
             padding: 0.4rem;
             max-width: 100%;
         }
+        .click-indicator {
+            position: absolute;
+            top: 15px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #6CB873;
+            padding: 0.5rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            transition: opacity 0.3s ease;
+        }
+        input[type="checkbox"] {
+            display: none;
+        }
+        input[type="checkbox"]:checked + .click-indicator {
+            display: none;
+        }
+        .flashcard-container {
+            position: relative;
+            width: 100%;
+        }
     </style>
 {% endblock %}
 {% block content %}
     {% if vocab_list[0] %}
-        <div class="flashcard" onclick="toggleDefinition()">
-            <span id="flashcard-word">{{vocab_list[0].word}}</span>
-        </div>
+    <div class="flashcard-container">
+        <input type="checkbox" id="hide-indicator" />
+        <label for="hide-indicator" class="flashcard" onclick="toggleDefinition()">
+            <span id="flashcard-word">{{ vocab_list[0].word }}</span>
+        </label>
+        <div class="click-indicator">Click to flip</div>
+    </div>
         <div class="navigation">
             <div class="arrow" onclick="previousVocabulary()">&#9664;</div>
             <span class="index-text" id="index-text">1 / {{ vocab_list | length }}</span>
             <div class="arrow" onclick="nextVocabulary()">&#9654;</div>
         </div>
+    </div>
 
         <!-- Add New Word Form -->
         <form id="add-vocab-form" onsubmit="addVocab(event)">
