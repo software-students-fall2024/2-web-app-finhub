@@ -229,7 +229,7 @@ def create_app():
         user = db.users.find_one({"username": current_user.username})
         vocab = db.users.find_one({
             "username": current_user.username,
-            "vocabList.word": word},{"vocabList.$": 1})
+            "vocabList.word": {"$regex": word, "$options": "i"}},{"vocabList.$": 1}) # $regex word matches words that contain word and $options: i makes it case insensitive
         
         vocab_list = user.get("vocabList", [])
         search_list = []
