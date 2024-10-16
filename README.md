@@ -38,8 +38,149 @@ A little exercise to build a web application following an agile development proc
 
 ## Steps necessary to run the software
 
-See instructions. Delete this line and place instructions to download, configure, and run the software here.
+### 1. Create or Update the `README.md` File
 
+- If you already have a `README.md` file, you can update it with the installation guide below. If not, you can create a new one in the root of your project.
+
+### 2. Installation Guide
+
+```
+## Installation Guide
+
+### 1. Clone the Repository
+
+Clone the repository to your local machine:
+
+```bash
+git clone https://github.com/software-students-fall2024/2-web-app-finhub.git
+```
+
+Navigate into the cloned directory:
+
+```bash
+
+cd 2-web-app-finhub
+```
+
+### 2. Set Up a Python Virtual Environment
+
+It is recommended to use a virtual environment to avoid conflicts with system-wide packages. You can create one with:
+
+```bash
+python3 -m venv venv
+```
+
+Activate the virtual environment:
+
+- On macOS/Linux:
+    
+    ```bash
+    source venv/bin/activate
+    ```
+    
+- On Windows:
+    
+    ```bash
+    .\venv\Scripts\activate
+    ```
+    
+
+### 3. Install the Required Dependencies
+
+Once the virtual environment is activated, install the required dependencies using the `requirements.txt` file:
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Set Up Environment Variables
+
+This project requires some environment variables to be set. Create a `.env` file in the root directory of the project:
+
+```bash
+touch .env
+```
+
+Add the following content to the `.env` file:
+
+```
+SECRET_KEY=your_secret_key
+MONGO_URI=mongodb+srv://your_mongodb_connection_string
+```
+
+Make sure to replace `your_secret_key` and `your_mongodb_connection_string` with your own values.
+
+### 5. Run the Application
+
+After setting up everything, you can run the application:
+
+```bash
+python app.py
+```
+
+The app should now be running on `http://127.0.0.1:5000/` by default.
+
+### 6. Register a New User
+
+To use the application, go to the sign-up page and create a new account.
+
+---
+
+## Additional Commands
+
+### Running the App in Debug Mode
+
+To run the Flask app in debug mode for development:
+
+```bash
+FLASK_ENV=development flask run
+```
+
+### Deactivating the Virtual Environment
+
+Once you're done working on the project, you can deactivate the virtual environment by running:
+
+```bash
+deactivate
+```
+
+---
+
+### Contributing
+
+Feel free to fork this project and contribute by submitting pull requests. Please make sure to write clear commit messages and create detailed pull requests.
+
+---
+
+### License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+```markdown
+markdown
+Copy code
+### 3. Add the README.md to Your Repository
+
+1. In your local repository:
+   - If you don't have a `README.md` file:
+     ```bash
+     touch README.md
+     ```
+
+   - If you already have one, open it with your favorite text editor and replace its content with the guide above or append the new content.
+
+2. After adding or updating the `README.md`, commit the changes:
+   ```bash
+   git add README.md
+   git commit -m "Add installation guide"
+
+```
+
+1. Push the changes to your GitHub repository:
+    
+    ```bash
+    git push origin main
+    ```
 ## Task boards
 
 https://github.com/orgs/software-students-fall2024/projects/45
