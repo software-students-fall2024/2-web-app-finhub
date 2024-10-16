@@ -8,13 +8,16 @@ Vocabulary
         body {
             font-family: Arial, sans-serif;
             background-color: black;
-            height: 871px; /* Adjusted height */
-            width: 398px; /* Adjusted width */
             margin: 0;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center; /* Center content horizontally */
+        }
+        h2{
+            color:  #6CB873;
+            text-align: left;
+            margin-bottom: 0.3rem;
         }
         .header {
             display: flex;
@@ -30,9 +33,15 @@ Vocabulary
             text-align: center;
             cursor: pointer;
             margin: 20px 0;
-            transition: background-color 0.3s;
             width: 100%; /* Make the flashcard full width */
             height: 30vh;
+            display: flex;
+            min-height: 30vh;
+        }
+        .flashcard #flashcard-word{
+            margin: auto;
+            color: black;
+            font-size: 1.3rem;
         }
         .flashcard:hover {
             background-color: #45a049;
@@ -42,7 +51,7 @@ Vocabulary
             justify-content: space-between;
             width: 100%;
             padding: 0 20px;
-            margin: 20px 0; /* Add margin to separate from flashcard */
+            margin: 0 0; /* Add margin to separate from flashcard */
         }
         .arrow {
             cursor: pointer;
@@ -58,7 +67,6 @@ Vocabulary
         }
         .word-bank {
             width: 100%;
-            overflow-y: scroll;
             margin-top: 20px;
         }
         .word-box {
@@ -84,18 +92,25 @@ Vocabulary
             padding-left: 0.2rem;
             flex-grow: 1;
         }
+        .word-box .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
         .word-box .edit-button,
         .word-box .delete-button {
             padding: 0.3rem 0.6rem;
             background-color: #008CBA;
             border: none;
             border-radius: 5px;
-            color: white;
             cursor: pointer;
             margin-left: 5px;
+            background-color: black;
+            color: #6CB873;
         }
         .word-box .delete-button {
             background-color: red;
+            color: white;
         }
         .start-quiz {
             background-color: #6CB873;
@@ -110,11 +125,11 @@ Vocabulary
         .search-bar {
             display: flex;
             width: 100%;
-            gap: 0.1rem;
+            gap: 0.3rem;
         }
         .search-bar input {
             flex-grow: 1;
-            background-color: #858585;
+            background-color: #cfcfcd;
             padding: 0.5rem;
             border-radius: 1rem;
         }
@@ -135,25 +150,32 @@ Vocabulary
             background-color: transparent;
         }
         .no-vocab {
-            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #6CB873;
         }
         #add-vocab-form {
             display: flex;
             flex-direction: column;
-            margin-top: 20px;
+            margin: 30px 0;
         }
         #add-vocab-form input {
-            margin-bottom: 10px;
+            margin-bottom: 2px;
             padding: 10px;
-            border-radius: 5px;
+            border-radius: 1rem;
             border: none;
+            background-color: #cfcfcd;
         }
         #add-vocab-form button {
+            margin-top: 5px;
             padding: 10px;
             background-color: #6CB873;
             color: black;
             border: none;
-            border-radius: 10px;
+            border-radius: 1rem;
             cursor: pointer;
         }
         #edit-form {
@@ -181,51 +203,61 @@ Vocabulary
             cursor: pointer;
             font-size: 1.2rem;
         }
+        .edit-input {
+            border: none;
+            border-radius: 1rem;
+            padding: 0.4rem;
+            max-width: 100%;
+        }
     </style>
 {% endblock %}
 {% block content %}
-
-    <!-- Add New Word Form -->
-    <form id="add-vocab-form" onsubmit="addVocab(event)">
-        <input type="text" id="new-word" placeholder="New word" required>
-        <input type="text" id="new-definition" placeholder="Definition" required>
-        <button type="submit">Add Word</button>
-    </form>
-
-    {% if vocab_list[0]%}
+    {% if vocab_list[0] %}
         <div class="flashcard" onclick="toggleDefinition()">
-            <span id="flashcard-word">{{vocab_list[0].word}}</span> 
+            <span id="flashcard-word">{{vocab_list[0].word}}</span>
         </div>
-    
         <div class="navigation">
             <div class="arrow" onclick="previousVocabulary()">&#9664;</div>
-            <span class="index-text" id="index-text">1 / {{vocab_list|length}}</span> <!-- Updated total -->
+            <span class="index-text" id="index-text">1 / {{ vocab_list | length }}</span>
             <div class="arrow" onclick="nextVocabulary()">&#9654;</div>
         </div>
-    
+
+        <!-- Add New Word Form -->
+        <form id="add-vocab-form" onsubmit="addVocab(event)">
+            <h2>ADD A WORD MANUALLY</h2>
+            <input type="text" id="new-word" placeholder="New word" required>
+            <input type="text" id="new-definition" placeholder="Definition" required>
+            <button type="submit">Add Word ></button>
+        </form>
+
+        <h2>WORD BANK</h2>
         <div class="search-bar">
             <input type="text" id="search-word" name="search-word" placeholder="Search for a word" {% if searchVal %} value="{{ searchVal }}"{% endif %} required>
             <button class="search-btn" onclick="search()">Search</button>
             <a class="x-btn" href="/vocab">x</a>
         </div>
-    
+
         <div class="word-bank" id="word-bank">
             {% if searchVal %}
                 {% for word in search_list %}
                 <div class="word-box">
-                    <div class="word">{{word.word}}</div>
-                    <div class="definition">{{word.definition}}</div>
-                    <button class="edit-button" onclick="editVocab('{{ word.word }}', '{{ word.definition }}')">Edit</button>
-                    <button class="delete-button" onclick="deleteWord('{{word.word}}')">x</button>
+                    <div class="word" id="word-{{ loop.index }}">{{ word.word }}</div>
+                    <div class="definition" id="definition-{{ loop.index }}">{{ word.definition }}</div>
+                    <div class="buttons">
+                        <!--<button class="edit-button" onclick="editVocab('{{ loop.index }}', '{{ word.word }}', '{{ word.definition }}')">Edit</button>-->
+                        <button class="delete-button" onclick="deleteWord('{{ word.word }}')">x</button>
+                    </div>
                 </div>
                 {% endfor %}
             {% else %}
                 {% for word in vocab_list %}
-                <div class="word-box">
-                    <div class="word">{{word.word}}</div>
-                    <div class="definition">{{word.definition}}</div>
-                    <button class="edit-button" onclick="editVocab('{{ word.word }}', '{{ word.definition }}')">Edit</button>
-                    <button class="delete-button" onclick="deleteWord('{{word.word}}')">x</button>
+                <div class="word-box" id="word-box-{{ loop.index }}">
+                    <div class="word" id="word-{{ loop.index }}">{{ word.word }}</div>
+                    <div class="definition" id="definition-{{ loop.index }}">{{ word.definition }}</div>
+                    <div class="buttons">
+                        <button class="edit-button" onclick="editVocab({{ loop.index }}, '{{ word.word }}', '{{ word.definition }}')">Edit</button>
+                        <button class="delete-button" onclick="deleteWord('{{ word.word }}')">x</button>
+                    </div>
                 </div>
                 {% endfor %}
             {% endif %}
@@ -233,17 +265,16 @@ Vocabulary
 
     {% else %}
         <div class="no-vocab">
-            There are no words yet!
+            <h2>There are no words yet!</h2>
+            <!-- Add New Word Form -->
+            <form id="add-vocab-form" onsubmit="addVocab(event)">
+                <h2>ADD A WORD MANUALLY</h2>
+                <input type="text" id="new-word" placeholder="New word" required>
+                <input type="text" id="new-definition" placeholder="Definition" required>
+                <button type="submit">Add Word ></button>
+            </form>
         </div>
     {% endif %}
-
-    <!-- Edit Form -->
-    <div id="edit-form">
-        <input type="hidden" id="edit-old-word">
-        <input type="text" id="edit-new-word" placeholder="New word" required>
-        <input type="text" id="edit-new-definition" placeholder="New definition" required>
-        <button onclick="submitEdit()">Save Changes</button>
-    </div>
 
     <script>
         const vocabList = {{ vocab_list | tojson }};
@@ -272,21 +303,21 @@ Vocabulary
         }
 
         function toggleDefinition() {
-            currSide = currSide==='word' ? 'definition' : 'word';
+            currSide = currSide === 'word' ? 'definition' : 'word';
             const content = document.getElementById('flashcard-word');
-            content.textContent = currSide==='word' ? vocabList[currentIndex].word : vocabList[currentIndex].definition;
+            content.textContent = currSide === 'word' ? vocabList[currentIndex].word : vocabList[currentIndex].definition;
         }
 
         function updateCard(){
             const flashcardWord = document.getElementById('flashcard-word');
             const indexTextElement = document.getElementById('index-text');
-            
+
             flashcardWord.textContent = vocabList[currentIndex].word;
             currSide = 'word';
-            
-            indexTextElement.textContent = `${currentIndex+1} / ${vocabList.length}`;
+
+            indexTextElement.textContent = `${currentIndex + 1} / ${vocabList.length}`;
         }
-        
+
         function previousVocabulary() {
             if (currentIndex > 0) {
                 currentIndex--;
@@ -322,19 +353,29 @@ Vocabulary
             .catch(error => console.error('Error:', error));
         }
 
-        // Function to populate edit form with the existing word and definition
-        function editVocab(word, definition) {
-            document.getElementById('edit-form').style.display = 'flex';
-            document.getElementById('edit-old-word').value = word;
-            document.getElementById('edit-new-word').value = word;
-            document.getElementById('edit-new-definition').value = definition;
+        // Function to edit vocab directly within the word and definition divs
+        function editVocab(index, word, definition) {
+            const wordDiv = document.getElementById(`word-${index}`);
+            const definitionDiv = document.getElementById(`definition-${index}`);
+            const wordBox = document.getElementById(`word-box-${index}`);
+
+            // Replace word and definition with input fields
+            wordDiv.innerHTML = `<input class="edit-input" type="text" id="edit-word-${index}" value="${word}" />`;
+            definitionDiv.innerHTML = `<input class="edit-input" type="text" id="edit-definition-${index}" value="${definition}" />`;
+
+            // Change the Edit button to Save
+            const editButton = wordBox.querySelector('.edit-button');
+            editButton.textContent = 'Save';
+            editButton.onclick = function() {
+                submitEdit(index);
+            };
         }
 
-        // Function to submit edit
-        function submitEdit() {
-            const oldWord = document.getElementById('edit-old-word').value;
-            const newWord = document.getElementById('edit-new-word').value;
-            const newDefinition = document.getElementById('edit-new-definition').value;
+        // Function to submit the updated vocab
+        function submitEdit(index) {
+            const newWord = document.getElementById(`edit-word-${index}`).value;
+            const newDefinition = document.getElementById(`edit-definition-${index}`).value;
+            const oldWord = vocabList[index - 1].word;
 
             fetch('/vocab/edit', {
                 method: 'POST',

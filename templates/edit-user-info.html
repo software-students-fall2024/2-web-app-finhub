@@ -86,8 +86,8 @@ Edit User Info
             cursor: pointer;
             width: 100%;
             font-size: 16px;
-            margin-top: 2vh;
             padding: 1rem 0rem;
+            text-decoration: none;
         }
         .delete-btn:hover {
             background-color: #d73e3e;
@@ -117,6 +117,9 @@ Edit User Info
             text-align: center;
             margin-bottom: 10px;
         }
+        #danger-zone{
+            color:  #d73e3e;
+        }
     </style>
 {% endblock %}
 {% block content %}
@@ -140,7 +143,7 @@ Edit User Info
 
     <button onclick="goBack()" class="back-btn">Cancel</button>
 
-    <h2>Danger Zone</h2>
+    <h2 id="danger-zone">Danger Zone</h2>
     <a href="/delete-acct" class="delete-btn">Delete Account</a>
 </div>
 

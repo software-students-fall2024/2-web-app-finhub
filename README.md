@@ -93,11 +93,11 @@ This project requires some environment variables to be set. Create a `.env` file
 touch .env
 ```
 
-Add the following content to the `.env` file:
+Add the following form of content to the `.env` file(the actual values will be provided in the discord channel):
 
 ```
-SECRET_KEY=your_secret_key
-MONGO_URI=mongodb+srv://your_mongodb_connection_string
+SECRET_KEY=<your_secret_key>
+MONGO_URI=<your_mongodb_uri>
 ```
 
 Make sure to replace `your_secret_key` and `your_mongodb_connection_string` with your own values.
@@ -151,4 +151,6 @@ This project is licensed under the GPL-3.0 License - see the LICENSE file for de
 
 ## Task boards
 
-https://github.com/orgs/software-students-fall2024/projects/45
+Sprint 1:https://github.com/orgs/software-students-fall2024/projects/10
+
+Sprint 2: https://github.com/orgs/software-students-fall2024/projects/45

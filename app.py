@@ -18,7 +18,7 @@ def create_app():
     
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default_secret_key')
 
-    connection_string = os.getenv('MONGO_URI', 'mongodb+srv://raa9917:Rr12112002@cluster0.p902n.mongodb.net/?retryWrites=true&w=majority')
+    connection_string = os.getenv('MONGO_URI')
 
     if connection_string is None:
         raise ValueError("MONGO_URI environment variable not found!")
@@ -50,7 +50,7 @@ def create_app():
     def home():
         # redirect to news page if the user is logged in, otherwise to login
         if current_user.is_authenticated:
-            return redirect(url_for("getNews"))
+            return redirect(url_for("getAllNews"))
         else:
             return redirect(url_for("login"))
     
@@ -63,7 +63,7 @@ def create_app():
             user = User.validate_login(db, username, password)
             if user:
                 login_user(user)
-                return redirect(url_for("getNews"))
+                return redirect(url_for("getAllNews"))
             else:
                 flash("Invalid username or password. Try again.")
                 return render_template('home.html', error="Error occurred!")
@@ -216,7 +216,6 @@ def create_app():
                 {"username": current_user.username, "vocabList.word": old_word},
                 {"$set": {"vocabList.$.word": new_word, "vocabList.$.definition": new_definition}}
             )
-            flash("Word updated successfully!")
             return jsonify({"message": "Vocab word updated!"}), 200
         else:
             flash("Error: Please provide the old word, new word, and definition!")
@@ -255,7 +254,7 @@ def create_app():
                 {"username": current_user.username}, 
                 {"$push": {"vocabList": new_vocab}}
             )
-            flash("Word added to the list!")
+            #flash("Word added to the list!")
             return jsonify({"message": "Word added successfully!"}), 200
         else:
             flash("Error: Please provide word and definition!")
@@ -272,7 +271,7 @@ def create_app():
                 {"$pull": {"vocabList": {"word": word}}}
             )
         
-            flash("Word successfully deleted!")
+            #flash("Word successfully deleted!")
         else:
             flash("Error: no word was provided to delete"
                   )
