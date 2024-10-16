@@ -27,10 +27,11 @@ News Content
 
         .news-content img{
             width: 100%;
+            margin-top: 1rem;
             border-radius: 0.8rem;
         }
 
-        .news-content #content{
+        .news-content #content, #author{
             color: white;
         }
 
@@ -72,8 +73,8 @@ News Content
     {%if data%}
         <div class="news-content">
             <h1>{{data.title}}</h1>
-            <img src={{data.image_url}} alt={{data.title}}/>
-            <p id="author">By {{data.author}}</p>
+            <img src={{data.topImage}} alt={{data.title}}/>
+            <p id="author">By {{data.author}}</p> <br>
             <p id="content">
                 {% for word in data.content.split() %}
                     <span class="content-word">{{ word }}</span>
@@ -151,9 +152,8 @@ News Content
                     .then(definition => {
                         // Get the position of the clicked word
                         const rect = word.getBoundingClientRect();
-                        const top = rect.top+25, left = rect.left;
-                        //const top = rect.top + window.scrollY - wordPopup.offsetHeight - 5;
-                        //const left = rect.left + window.scrollX;
+                        const top = rect.top+25 + window.scrollY - wordPopup.offsetHeight - 5;
+                        const left = rect.left + window.scrollX;
 
                         // Position the popup near the word and show it
                         wordPopup.style.position = 'absolute';

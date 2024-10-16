@@ -46,7 +46,11 @@ News
             border-radius: 0.8rem;
         }
 
-        li .news-title{
+        li a{
+            text-decoration: none;
+        }
+
+        li a .news-title{
             grid-column: 2/3;
             width: 50vw;
             grid-row: 1/2;
@@ -54,7 +58,7 @@ News
             color: white;
         }
 
-        li .news-date{
+        li a .news-date{
             grid-column: 2/3;
             grid-row: 2/3;
             margin: 0rem;
@@ -73,29 +77,17 @@ News
     <div class="container1">
         <h1>Top News</h1>
         <ul id="news-list" class="news-list">
-            <!-- temporarily hard coded -->
-             <li>
-                <a href="{{ url_for('getNewsContent', title='News headline') }}" class="news-item">
-                    <img class="news-image" src="https://appsero.com/app/uploads/2022/02/how-to-fix-the-url-problems.png" alt="image"/>
-                    <p class="news-title">News headline</p>
-                    <p class="news-date">2020-10-10</p> 
-                </a>
-             </li>
-             <li>
-                <a href="{{ url_for('getNewsContent', title='News headline') }}"  class="news-item">
-                    <img class="news-image" src="https://appsero.com/app/uploads/2022/02/how-to-fix-the-url-problems.png" alt="image"/>
-                    <p class="news-title">News headline</p>
-                    <p class="news-date">2020-10-10</p> 
-                </a>
-             </li>
-             <li>
-                <a href="{{ url_for('getNewsContent', title='News headline') }}"  class="news-item">
-                    <img class="news-image" src="https://appsero.com/app/uploads/2022/02/how-to-fix-the-url-problems.png" alt="image"/>
-                    <p class="news-title">News headline</p>
-                    <p class="news-date">2020-10-10</p> 
-                </a>
-             </li>
-
+            {% if articles %}
+                {% for article in articles %}
+                    <li>
+                        <a href="{{ url_for('getNewsContent', title=article.title) }}" class="news-item">
+                            <img class="news-image" src="{{article.topImage}}" alt="image"/>
+                            <p class="news-title">{{article.title}}</p>
+                            <p class="news-date">{{article.date.replace('%','')}}</p> 
+                        </a>
+                    </li>
+                {% endfor %}
+            {% endif %}
         </ul>
     </div>
 {% endblock %}

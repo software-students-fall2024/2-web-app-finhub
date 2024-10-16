@@ -26,6 +26,7 @@ def create_app():
     # Create a MongoDB client with the correct connection string
     client = MongoClient(connection_string)
     db = client["test_db"]
+    articles_collection = db["articles"]
     
     # user auth stuff
     login_manager = LoginManager()
@@ -277,27 +278,30 @@ def create_app():
                   )
         return redirect(url_for("getVocab"))
     
-    @app.route("/news")
-    def getNews():
-        
-        return render_template("news.html", firstname=current_user.firstname, lastname = current_user.lastname)
     
-    @app.route("/news-content/<title>")
+    
+    
+    
+    @app.route('/news-content/<title>')
     def getNewsContent(title):
-        #search for news by title
-        ### TODO ###
-        
-        #result data 
-        data = {
-            #replace the dummy data later
-            "title": "title",
-            "image_url": "https://appsero.com/app/uploads/2022/02/how-to-fix-the-url-problems.png",
-            "autor": "chloe han",
-            "date": "2020/09/18",
-            "content": "content content content apple inflation"
-        }
+        # Fetch the article from MongoDB by title
+        article = articles_collection.find_one({"title": title})
+    
+        # If the article is found, render it in the template
+        if article:
+            return render_template('news-content.html', data=article)
+    
+        # If the article is not found, return an error page or message
+        return "Article not found", 404
+    
+    @app.route('/news')
+    def getAllNews():
+        # Fetch all articles from MongoDB
+        articles = list(articles_collection.find({}))
+    
+        # Render the 'news.html' template and pass the articles to it
+        return render_template('news.html', firstname=current_user.firstname, lastname = current_user.lastname, articles=articles)
 
-        return render_template("news-content.html", data=data)
     
     @app.route("/menu")
     def getMenu():
