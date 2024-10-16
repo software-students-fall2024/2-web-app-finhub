@@ -9,6 +9,7 @@ Vocabulary
             font-family: Arial, sans-serif;
             background-color: black;
             margin: 0;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -18,6 +19,12 @@ Vocabulary
             color:  #6CB873;
             text-align: left;
             margin-bottom: 0.3rem;
+        }
+        .content-container {
+            width: 100%;
+            max-width: 800px;
+            padding: 0 20px;
+            box-sizing: border-box;
         }
         .header {
             display: flex;
@@ -230,6 +237,7 @@ Vocabulary
 {% endblock %}
 {% block content %}
     {% if vocab_list[0] %}
+    <div class="content-container">
     <div class="flashcard-container">
         <input type="checkbox" id="hide-indicator" />
         <label for="hide-indicator" class="flashcard" onclick="toggleDefinition()">
@@ -296,6 +304,7 @@ Vocabulary
                 <button type="submit">Add Word ></button>
             </form>
         </div>
+    </div>
     {% endif %}
 
     <script>
